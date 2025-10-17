@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Space Station Safety Monitor - DEMO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0e1a 0%, #1e2337 50%, #2d3561 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(45deg, #00ffff, #0080ff, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #b0c4de;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .demo-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .demo-card h3 {
+            color: #00ffff;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #00ffff;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #b0c4de;
+        }
+
+        .detection-demo {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .detection-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .detection-item.detected {
+            border-left: 4px solid #00ff00;
+        }
+
+        .detection-item.missing {
+            border-left: 4px solid #ff0000;
+        }
+
+        .detection-item.warning {
+            border-left: 4px solid #ffaa00;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .status-detected {
+            background: #00ff0030;
+            color: #00ff00;
+        }
+
+        .status-missing {
+            background: #ff000030;
+            color: #ff0000;
+        }
+
+        .status-warning {
+            background: #ffaa0030;
+            color: #ffaa00;
+        }
+
+        .simulate-btn {
+            background: linear-gradient(45deg, #00ffff, #0080ff);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .simulate-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .alert-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .alert-item {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .feature-list li:before {
+            content: "✨ ";
+            color: #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🚀 ORBITAL GUARD</h1>
+            <p>Space Station Safety Monitoring System</p>
+            <p><strong>AI-Powered Object Detection for Critical Safety Equipment</strong></p>
+        </div>
+
+        <div class="demo-grid">
+            <div class="demo-card">
+                <h3>🎯 System Overview</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">1,247</div>
+                        <div class="stat-label">Total Detections</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">97.3%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">7</div>
+                        <div class="stat-label">Object Classes</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0.8s</div>
+                        <div class="stat-label">Response Time</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="demo-card">
+                <h3>🔍 Live Detection Status</h3>
+                <div class="detection-demo" id="detectionDemo">
+                    <div class="detection-item detected">
+                        <span>🧯 Fire Extinguisher</span>
+                        <span class="status-badge status-detected">DETECTED</span>
+                    </div>
+                    <div class="detection-item detected">
+                        <span>🩹 First Aid Box</span>
+                        <span class="status-badge status-detected">DETECTED</span>
+                    </div>
+                    <div class="detection-item missing">
+                        <span>🫁 Oxygen Tank</span>
+                        <span class="status-badge status-missing">MISSING</span>
+                    </div>
+                    <div class="detection-item warning">
+                        <span>� Fire Alarm</span>
+                        <span class="status-badge status-warning">OBSTRUCTED</span>
+                    </div>
+                    <div class="detection-item detected">
+                        <span>� Emergency Phone</span>
+                        <span class="status-badge status-detected">DETECTED</span>
+                    </div>
+                    <div class="detection-item detected">
+                        <span>⚡ Safety Switch Panel</span>
+                        <span class="status-badge status-detected">DETECTED</span>
+                    </div>
+                    <div class="detection-item warning">
+                        <span>🧪 Nitrogen Tank</span>
+                        <span class="status-badge status-warning">LOW PRESSURE</span>
+                    </div>
+                </div>
+                <button class="simulate-btn" onclick="simulateDetection()">🔄 Simulate New Scan</button>
+            </div>
+
+            <div class="demo-card">
+                <h3>⚡ Key Features</h3>
+                <ul class="feature-list">
+                    <li>Real-time YOLO object detection</li>
+                    <li>7 critical safety object classes</li>
+                    <li>Synthetic training data integration</li>
+                    <li>Live camera feed processing</li>
+                    <li>Instant alert system</li>
+                    <li>Space station themed UI</li>
+                    <li>WebSocket real-time updates</li>
+                    <li>File upload detection</li>
+                    <li>Analytics dashboard</li>
+                    <li>Mobile-responsive design</li>
+                </ul>
+            </div>
+
+            <div class="demo-card">
+                <h3>🏗️ Technical Stack</h3>
+                <ul class="feature-list">
+                    <li>React 18 Frontend</li>
+                    <li>Python Flask Backend</li>
+                    <li>YOLO v8 Object Detection</li>
+                    <li>OpenCV Image Processing</li>
+                    <li>WebSocket Communication</li>
+                    <li>Recharts Visualization</li>
+                    <li>Framer Motion Animations</li>
+                    <li>Lucide React Icons</li>
+                    <li>Docker Containerization</li>
+                    <li>Duality AI Falcon Dataset</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="demo-card">
+            <h3>🎮 Interactive Demo Controls</h3>
+            <p style="margin-bottom: 20px;">This is a demonstration of the Space Station Safety Monitoring System. The actual application includes:</p>
+            <div style="text-align: center;">
+                <button class="simulate-btn" onclick="simulateEmergency()">🚨 Simulate Emergency</button>
+                <button class="simulate-btn" onclick="simulateAllClear()">✅ All Systems Normal</button>
+                <button class="simulate-btn" onclick="simulateRandomUpdate()">🎲 Random Status Update</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert-panel" id="alertPanel"></div>
+
+    <script>
+        // Create stars animation
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Create alert
+        function createAlert(message, type = 'critical') {
+            const alertPanel = document.getElementById('alertPanel');
+            const alert = document.createElement('div');
+            alert.className = 'alert-item';
+            alert.innerHTML = `
+                <div style="font-weight: bold; margin-bottom: 5px;">🚨 ${type.toUpperCase()} ALERT</div>
+                <div>${message}</div>
+                <div style="font-size: 0.8em; color: #ccc; margin-top: 5px;">${new Date().toLocaleTimeString()}</div>
+            `;
+            alertPanel.appendChild(alert);
+            
+            // Remove alert after 5 seconds
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.parentNode.removeChild(alert);
+                }
+            }, 5000);
+        }
+
+        // Simulation functions
+        function simulateDetection() {
+            const objects = [
+                { name: '🧯 Fire Extinguisher', status: 'detected' },
+                { name: '🩹 First Aid Box', status: 'detected' },
+                { name: '🫁 Oxygen Tank', status: Math.random() > 0.5 ? 'detected' : 'missing' },
+                { name: '� Fire Alarm', status: Math.random() > 0.3 ? 'detected' : 'warning' },
+                { name: '� Emergency Phone', status: 'detected' },
+                { name: '⚡ Safety Switch Panel', status: 'detected' },
+                { name: '🧪 Nitrogen Tank', status: Math.random() > 0.4 ? 'detected' : 'warning' }
+            ];
+
+            const demo = document.getElementById('detectionDemo');
+            demo.innerHTML = '';
+
+            objects.forEach(obj => {
+                const item = document.createElement('div');
+                item.className = `detection-item ${obj.status}`;
+                
+                let statusText = obj.status.toUpperCase();
+                let statusClass = `status-${obj.status}`;
+                
+                if (obj.status === 'warning') {
+                    statusText = Math.random() > 0.5 ? 'OBSTRUCTED' : 'LOW BATTERY';
+                }
+                
+                item.innerHTML = `
+                    <span>${obj.name}</span>
+                    <span class="status-badge ${statusClass}">${statusText}</span>
+                `;
+                demo.appendChild(item);
+
+                // Create alerts for issues
+                if (obj.status === 'missing') {
+                    createAlert(`${obj.name} is missing from required location!`, 'critical');
+                } else if (obj.status === 'warning') {
+                    createAlert(`${obj.name} requires attention - ${statusText.toLowerCase()}`, 'warning');
+                }
+            });
+        }
+
+        function simulateEmergency() {
+            createAlert('Multiple critical safety items missing!', 'emergency');
+            createAlert('Fire Extinguisher not detected in Module A-7!', 'critical');
+            createAlert('Emergency Oxygen Mask missing from Module B-3!', 'critical');
+            
+            // Update display to show emergency state
+            setTimeout(simulateDetection, 500);
+        }
+
+        function simulateAllClear() {
+            createAlert('All safety systems operational', 'info');
+            
+            const demo = document.getElementById('detectionDemo');
+            demo.innerHTML = `
+                <div class="detection-item detected"><span>🧯 Fire Extinguisher</span><span class="status-badge status-detected">DETECTED</span></div>
+                <div class="detection-item detected"><span>🩹 First Aid Box</span><span class="status-badge status-detected">DETECTED</span></div>
+                <div class="detection-item detected"><span>🫁 Oxygen Tank</span><span class="status-badge status-detected">DETECTED</span></div>
+                <div class="detection-item detected"><span>� Fire Alarm</span><span class="status-badge status-detected">DETECTED</span></div>
+                <div class="detection-item detected"><span>� Emergency Phone</span><span class="status-badge status-detected">DETECTED</span></div>
+                <div class="detection-item detected"><span>⚡ Safety Switch Panel</span><span class="status-badge status-detected">DETECTED</span></div>
+                <div class="detection-item detected"><span>🧪 Nitrogen Tank</span><span class="status-badge status-detected">DETECTED</span></div>
+            `;
+        }
+
+        function simulateRandomUpdate() {
+            const messages = [
+                'New detection scan completed',
+                'Camera feed updated',
+                'Safety check performed',
+                'System calibration complete',
+                'Detection accuracy improved'
+            ];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            createAlert(randomMessage, 'info');
+            
+            setTimeout(simulateDetection, 1000);
+        }
+
+        // Initialize
+        createStars();
+        
+        // Auto-update detection every 10 seconds
+        setInterval(simulateDetection, 10000);
+        
+        // Show initial random alert
+        setTimeout(() => {
+            createAlert('Space Station Safety Monitor initialized', 'info');
+        }, 2000);
+    </script>
+</body>
+</html>

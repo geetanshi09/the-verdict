@@ -1,0 +1,47 @@
+# Space Station Safety Dataset Configuration
+# YOLO format dataset config for 7 critical safety objects
+
+# Dataset paths (relative to this file)
+path: ./dataset  # root directory
+train: train/images  # training images folder
+val: val/images      # validation images folder
+
+# Number of classes
+nc: 7
+
+# Class names (based on space station safety objects)
+names:
+  0: 'fire_extinguisher'     # Fire suppression equipment
+  1: 'oxygen_mask'           # Emergency breathing apparatus  
+  2: 'first_aid_kit'         # Medical emergency supplies
+  3: 'tool_kit'              # Maintenance and repair tools
+  4: 'radiation_detector'    # Radiation monitoring device
+  5: 'communication_device'  # Emergency communication equipment
+  6: 'power_supply'          # Backup power source
+
+# Training hyperparameters (optimized for space station environment)
+epochs: 50        # Reduced for faster training given time constraint
+batch_size: 16    # Adjust based on GPU memory
+imgsz: 640        # Standard YOLO image size
+workers: 4        # Data loading workers
+
+# Model configuration  
+model: yolov8n.pt  # Start with nano model for speed
+device: 0         # Use GPU if available, otherwise CPU
+
+# Augmentation settings (moderate for synthetic data)
+hsv_h: 0.015      # Hue augmentation
+hsv_s: 0.7        # Saturation augmentation  
+hsv_v: 0.4        # Value/brightness augmentation
+degrees: 0.0      # Rotation (disabled for space station orientation)
+translate: 0.1    # Translation augmentation
+scale: 0.5        # Scale augmentation
+shear: 0.0        # Shear (disabled)
+perspective: 0.0  # Perspective (disabled)
+flipud: 0.0       # Vertical flip (disabled for space orientation)
+fliplr: 0.5       # Horizontal flip
+mosaic: 1.0       # Mosaic augmentation
+mixup: 0.0        # Mixup augmentation
+
+# Additional settings
+save_period: -1   # Save model every N epochs (-1 to disable)

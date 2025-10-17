@@ -1,0 +1,30 @@
+# 🚀 Space Station Safety Monitor - Requirements
+# Based on your 70.ipynb implementation
+
+# Core ML and Computer Vision
+ultralytics==8.2.10
+torch
+torchvision
+opencv-python
+numpy
+Pillow
+
+# Flask Backend
+Flask==2.3.3
+Flask-SocketIO==5.3.6
+Flask-CORS==4.0.0
+
+# Data Processing
+PyYAML
+pandas
+matplotlib
+seaborn
+
+# Additional utilities
+tqdm
+python-socketio
+eventlet
+
+# Optional (for advanced features)
+# tensorboard
+# wandb
